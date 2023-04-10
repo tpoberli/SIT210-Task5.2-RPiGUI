@@ -1,0 +1,61 @@
+import sys
+import RPi.GPIO as GPIO
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QRadioButton, QPushButton
+
+# Set up the GPIO pins as outputs
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(36, GPIO.OUT)
+GPIO.setup(38, GPIO.OUT)
+GPIO.setup(40, GPIO.OUT)
+
+# Define functions to control the LEDs
+def turn_on_red():
+    GPIO.output(36, GPIO.HIGH)
+    GPIO.output(38, GPIO.LOW)
+    GPIO.output(40, GPIO.LOW)
+
+def turn_on_green():
+    GPIO.output(36, GPIO.LOW)
+    GPIO.output(38, GPIO.HIGH)
+    GPIO.output(40, GPIO.LOW)
+
+def turn_on_blue():
+    GPIO.output(36, GPIO.LOW)
+    GPIO.output(38, GPIO.LOW)
+    GPIO.output(40, GPIO.HIGH)
+
+def exit_gui():
+    GPIO.cleanup()
+    sys.exit()
+
+# Create the GUI window and layout
+app = QApplication(sys.argv)
+window = QWidget()
+layout = QVBoxLayout()
+
+# Create radio buttons for each LED
+red_button = QRadioButton('Red LED')
+red_button.clicked.connect(turn_on_red)
+
+green_button = QRadioButton('Green LED')
+green_button.clicked.connect(turn_on_green)
+
+blue_button = QRadioButton('Blue LED')
+blue_button.clicked.connect(turn_on_blue)
+
+# Create a button to exit the GUI
+exit_button = QPushButton('Exit')
+exit_button.clicked.connect(exit_gui)
+
+# Add the radio buttons and exit button to the layout
+layout.addWidget(red_button)
+layout.addWidget(green_button)
+layout.addWidget(blue_button)
+layout.addWidget(exit_button)
+
+# Set the layout for the window and show it
+window.setLayout(layout)
+window.show()
+
+# Start the application loop
+sys.exit(app.exec_())
